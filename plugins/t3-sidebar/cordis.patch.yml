@@ -1,0 +1,3 @@
+- insert:
+    - id: t3-sidebar
+      name: '@local/t3-sidebar'

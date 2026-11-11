@@ -1,0 +1,3 @@
+- insert:
+    - id: cmd-j-terminal
+      name: '@local/cmd-j-terminal'

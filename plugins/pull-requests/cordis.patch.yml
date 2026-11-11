@@ -1,0 +1,3 @@
+- insert:
+    - id: pull-requests
+      name: '@local/pull-requests'

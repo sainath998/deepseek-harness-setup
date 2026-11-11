@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Search jump",
+    "description": "Opening a sidebar search result scrolls the chat to the matching text and highlights it."
+  }
+}

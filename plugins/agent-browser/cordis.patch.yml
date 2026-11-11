@@ -1,0 +1,15 @@
+- insert:
+    - id: agent-browser
+      name: '@local/agent-browser'
+# The agent's browser in the sidebar replaces the built-in sandboxed Browser tab.
+- id: ui-sidebar-browser
+  name: '@deepseek-ai/dsh-client-ui-sidebar-browser'
+  disabled: true
+# The agent's Chrome lives only inside DSH (sidebar / floating preview), like T3 Code's browser:
+# headless, so no second Chrome window or Dock icon. On macOS headless Chrome renders on the GPU.
+# Every bcdp_* tool stays registered (not only bcdp_status), so every agent can drive it.
+- id: dsh-browser-cdp
+  name: dsh-browser-cdp
+  config:
+    toolInjection: always
+    localHeadless: true

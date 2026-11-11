@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Pull requests",
+    "description": "T3 Code-style, read-only GitHub PR panel in the right sidebar: PRs this chat created, the open PR for the current branch, and PRs you link, with checks, reviews, timeline and files."
+  }
+}

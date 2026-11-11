@@ -1,0 +1,47 @@
+{
+  "name": "dsh-profile-desktop",
+  "private": true,
+  "dependencies": {
+    "@local/agent-browser": "link:__PLUGINS_DIR__/agent-browser",
+    "@local/cmd-j-terminal": "link:__PLUGINS_DIR__/cmd-j-terminal",
+    "@local/delete-chat": "link:__PLUGINS_DIR__/delete-chat",
+    "@local/fast-animations": "link:__PLUGINS_DIR__/fast-animations",
+    "@local/pull-requests": "link:__PLUGINS_DIR__/pull-requests",
+    "@local/search-jump": "link:__PLUGINS_DIR__/search-jump",
+    "@local/session-number-shortcuts": "link:__PLUGINS_DIR__/session-number-shortcuts",
+    "@local/settled-section": "link:__PLUGINS_DIR__/settled-section",
+    "@local/sidebar-bottom-bar": "link:__PLUGINS_DIR__/sidebar-bottom-bar",
+    "@local/sidebar-toggle-shortcuts": "link:__PLUGINS_DIR__/sidebar-toggle-shortcuts",
+    "@local/t3-sidebar": "link:__PLUGINS_DIR__/t3-sidebar",
+    "@local/workspace-labels": "link:__PLUGINS_DIR__/workspace-labels",
+    "dsh-browser-cdp": "1.9.9",
+    "dsh-oh-my-claude": "1.6.1",
+    "dsh-opencode-palette": "2.1.12",
+    "dsh-plugin-rea": "2.0.16"
+  },
+  "dsh": {
+    "profile": {
+      "bundles": [
+        "@deepseek-ai/dsh-base",
+        "@deepseek-ai/dsh-web-app",
+        "dsh-oh-my-claude",
+        "dsh-plugin-rea",
+        "dsh-opencode-palette",
+        "@local/session-number-shortcuts",
+        "@local/sidebar-bottom-bar",
+        "@local/sidebar-toggle-shortcuts",
+        "@local/fast-animations",
+        "@local/t3-sidebar",
+        "@local/search-jump",
+        "@local/workspace-labels",
+        "@local/delete-chat",
+        "@local/settled-section",
+        "@local/pull-requests",
+        "@local/cmd-j-terminal",
+        "dsh-browser-cdp",
+        "@local/agent-browser",
+        "@deepseek-ai/dsh-experimental-plugin-market-bundle"
+      ]
+    }
+  }
+}

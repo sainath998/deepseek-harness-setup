@@ -1,0 +1,3 @@
+- insert:
+    - id: sidebar-bottom-bar
+      name: '@local/sidebar-bottom-bar'

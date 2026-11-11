@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Fast animations",
+    "description": "Makes every one-shot animation and transition in the app finish in 0.05 seconds; looping spinners keep their speed."
+  }
+}

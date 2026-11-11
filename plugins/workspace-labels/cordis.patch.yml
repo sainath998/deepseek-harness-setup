@@ -1,0 +1,3 @@
+- insert:
+    - id: workspace-labels
+      name: '@local/workspace-labels'

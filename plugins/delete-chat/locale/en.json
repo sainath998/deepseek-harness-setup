@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Delete chat",
+    "description": "Adds Delete chat to the session right-click menu: permanently removes the chat and its local copy."
+  }
+}

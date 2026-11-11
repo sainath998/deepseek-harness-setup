@@ -1,0 +1,3 @@
+- insert:
+    - id: session-number-shortcuts
+      name: '@local/session-number-shortcuts'

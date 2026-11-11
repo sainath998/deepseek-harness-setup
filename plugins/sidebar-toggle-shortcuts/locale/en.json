@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sidebar toggle shortcuts",
+    "description": "Cmd+Shift+E toggles the left sidebar and Cmd+Shift+B toggles the right sidebar, with a faster slide."
+  }
+}

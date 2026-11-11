@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Cmd+J terminal",
+    "description": "Cmd+J toggles a terminal panel along the bottom of the window, running in the current chat's working directory."
+  }
+}

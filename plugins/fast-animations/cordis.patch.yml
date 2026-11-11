@@ -1,0 +1,3 @@
+- insert:
+    - id: fast-animations
+      name: '@local/fast-animations'

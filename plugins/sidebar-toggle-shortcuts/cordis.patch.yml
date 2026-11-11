@@ -1,0 +1,3 @@
+- insert:
+    - id: sidebar-toggle-shortcuts
+      name: '@local/sidebar-toggle-shortcuts'

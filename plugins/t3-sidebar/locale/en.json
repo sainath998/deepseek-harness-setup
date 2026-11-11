@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "T3-style sidebar",
+    "description": "Removes the sidebar toggle icon, the empty top strip and the New Session button, and moves the Workspaces header up beside the window buttons, like T3 Code."
+  }
+}

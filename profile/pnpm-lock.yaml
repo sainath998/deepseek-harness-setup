@@ -1,0 +1,165 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: false
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@local/agent-browser':
+        specifier: link:__PLUGINS_DIR__/agent-browser
+        version: link:../../../.dsh-local-plugins/agent-browser
+      '@local/cmd-j-terminal':
+        specifier: link:__PLUGINS_DIR__/cmd-j-terminal
+        version: link:../../../.dsh-local-plugins/cmd-j-terminal
+      '@local/delete-chat':
+        specifier: link:__PLUGINS_DIR__/delete-chat
+        version: link:../../../.dsh-local-plugins/delete-chat
+      '@local/fast-animations':
+        specifier: link:__PLUGINS_DIR__/fast-animations
+        version: link:../../../.dsh-local-plugins/fast-animations
+      '@local/pull-requests':
+        specifier: link:__PLUGINS_DIR__/pull-requests
+        version: link:../../../.dsh-local-plugins/pull-requests
+      '@local/search-jump':
+        specifier: link:__PLUGINS_DIR__/search-jump
+        version: link:../../../.dsh-local-plugins/search-jump
+      '@local/session-number-shortcuts':
+        specifier: link:__PLUGINS_DIR__/session-number-shortcuts
+        version: link:../../../.dsh-local-plugins/session-number-shortcuts
+      '@local/settled-section':
+        specifier: link:__PLUGINS_DIR__/settled-section
+        version: link:../../../.dsh-local-plugins/settled-section
+      '@local/sidebar-bottom-bar':
+        specifier: link:__PLUGINS_DIR__/sidebar-bottom-bar
+        version: link:../../../.dsh-local-plugins/sidebar-bottom-bar
+      '@local/sidebar-toggle-shortcuts':
+        specifier: link:__PLUGINS_DIR__/sidebar-toggle-shortcuts
+        version: link:../../../.dsh-local-plugins/sidebar-toggle-shortcuts
+      '@local/t3-sidebar':
+        specifier: link:__PLUGINS_DIR__/t3-sidebar
+        version: link:../../../.dsh-local-plugins/t3-sidebar
+      '@local/workspace-labels':
+        specifier: link:__PLUGINS_DIR__/workspace-labels
+        version: link:../../../.dsh-local-plugins/workspace-labels
+      dsh-browser-cdp:
+        specifier: ^1.9.9
+        version: 1.9.9
+      dsh-oh-my-claude:
+        specifier: ^1.6.1
+        version: 1.6.1(@deepseek-ai/schemastery@3.19.0)
+      dsh-opencode-palette:
+        specifier: ^2.1.12
+        version: 2.1.12
+      dsh-plugin-rea:
+        specifier: ^2.0.16
+        version: 2.0.16
+
+packages:
+
+  '@deepseek-ai/cosmokit@1.9.0':
+    resolution: {integrity: sha512-5O1S53mZiJyZYcvxxD0Qv1EY7qFPSxbGyD8CbVK6gw7W9FvcXZj2YIX1ZkOqyQQ3Xt2rFkZDHJv0+V3Zmmp8CA==}
+
+  '@deepseek-ai/schemastery@3.19.0':
+    resolution: {integrity: sha512-bDXoYQa7ghAhmdYD5VPlzKxEzJV/aKkz5l4V5h1u06z8GAPN1ROewSjvR9WiXhpa52E9fng8lpH5QdCRIQgnyQ==}
+
+  '@standard-schema/spec@1.1.0':
+    resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
+
+  dsh-browser-cdp@1.9.9:
+    resolution: {integrity: sha512-62hshlTrEE/YVdnFHokfAvQ1WPE2Tg6taMrTHmaetimC/iu6gJCLaKIGq232C0VJMsuECrIZAqA2xjtQiJh47Q==}
+    engines: {dsh: '>=0.1.7-rc.1 <0.3.0-0', node: '>=22'}
+    peerDependencies:
+      '@deepseek-ai/dsh-client-locale': '>=0.1.7-rc.1 <0.3.0-0'
+      '@deepseek-ai/dsh-client-store': '>=0.1.7-rc.1 <0.3.0-0'
+      '@deepseek-ai/dsh-client-ui-settings-plugins': '>=0.1.7-rc.1 <0.3.0-0'
+      '@deepseek-ai/dsh-client-ui-slots': '>=0.1.7-rc.1 <0.3.0-0'
+      '@deepseek-ai/dsh-settings': '>=0.1.7-rc.1 <0.3.0-0'
+      '@deepseek-ai/dsh-tools': '>=0.1.7-rc.1 <0.3.0-0'
+      react: ^18.2.0
+    peerDependenciesMeta:
+      '@deepseek-ai/dsh-client-locale':
+        optional: true
+      '@deepseek-ai/dsh-client-store':
+        optional: true
+      '@deepseek-ai/dsh-client-ui-settings-plugins':
+        optional: true
+      '@deepseek-ai/dsh-client-ui-slots':
+        optional: true
+      '@deepseek-ai/dsh-settings':
+        optional: true
+      '@deepseek-ai/dsh-tools':
+        optional: true
+
+  dsh-log@0.3.4:
+    resolution: {integrity: sha512-uCG6sLTze5YjmZmLln2KAeCCepsKvzGhnpZmkym/3OKNOsMKH5sA2lunwrLoOfmLxxju3/ZkKQmLp76Fklpw2w==}
+    engines: {node: '>=22'}
+    hasBin: true
+
+  dsh-oh-my-claude@1.6.1:
+    resolution: {integrity: sha512-w8szgpjP8qTkqmyKUiqdsXioFST/yvClJJtkaPBnFFv/wycBsL/wNI627wbfflt4hVqwLyHM65usLX06LJfmdA==}
+    engines: {dsh: '>=0.2.2-alpha.2 <0.3.0', node: '>=22.15.0'}
+    peerDependencies:
+      '@deepseek-ai/cordis': ^4.0.2
+      '@deepseek-ai/dsh-llm': '>=0.2.2-alpha.2 <0.3.0'
+      '@deepseek-ai/schemastery': ^3.18.0
+      react: ^18.3.1
+      react-dom: ^18.3.1
+    peerDependenciesMeta:
+      '@deepseek-ai/cordis':
+        optional: true
+      '@deepseek-ai/dsh-llm':
+        optional: true
+      '@deepseek-ai/schemastery':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+
+  dsh-opencode-palette@2.1.12:
+    resolution: {integrity: sha512-5Bi1DkFixXg0EtWUUMJBwSSudHRREa4yrjLHc6pPe3+5/ar+fdyu9nTzUVXa//PrSJO3RUlhshlQeaKSdL60rA==}
+    engines: {dsh: '>=0.2.0-rc.1', node: '>=22.18.0'}
+
+  dsh-plugin-rea@2.0.16:
+    resolution: {integrity: sha512-g94bY+1rNoQ9CoBwJNN8YhbfMTmebrfl5l5FK/1FsmbwPY0RgqSOrs8YXZdbayeCEuWWR30HxldajJEybdMpuw==}
+    engines: {dsh: '>=0.1.7-rc.2 <0.3.0-0', node: ^22.23.4 || ^24.22.1 || >=26.12.1}
+    hasBin: true
+
+  dsh-plugin-update@0.18.39:
+    resolution: {integrity: sha512-06qfoOTdWxnGHasdpJCWHWy9seTyfr84GsxP9kaCHI9eEds7gYe6O3RBUYm7uvuMk1W1oL+rnn8EV6AR78Cm1g==}
+    engines: {node: '>=22'}
+
+snapshots:
+
+  '@deepseek-ai/cosmokit@1.9.0': {}
+
+  '@deepseek-ai/schemastery@3.19.0':
+    dependencies:
+      '@deepseek-ai/cosmokit': 1.9.0
+      '@standard-schema/spec': 1.1.0
+
+  '@standard-schema/spec@1.1.0': {}
+
+  dsh-browser-cdp@1.9.9:
+    dependencies:
+      '@deepseek-ai/schemastery': 3.19.0
+
+  dsh-log@0.3.4: {}
+
+  dsh-oh-my-claude@1.6.1(@deepseek-ai/schemastery@3.19.0):
+    optionalDependencies:
+      '@deepseek-ai/schemastery': 3.19.0
+
+  dsh-opencode-palette@2.1.12:
+    dependencies:
+      dsh-log: 0.3.4
+      dsh-plugin-update: 0.18.39
+
+  dsh-plugin-rea@2.0.16: {}
+
+  dsh-plugin-update@0.18.39:
+    dependencies:
+      dsh-log: 0.3.4

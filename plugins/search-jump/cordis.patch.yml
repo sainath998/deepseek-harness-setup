@@ -1,0 +1,3 @@
+- insert:
+    - id: search-jump
+      name: '@local/search-jump'
