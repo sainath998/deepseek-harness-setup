@@ -18,7 +18,7 @@ APP="/Applications/DeepSeek Harness.app"
 DSH="$APP/Contents/Resources/runtime/cli/bin/dsh"
 
 REPO="$(cd "$(dirname "$0")" && pwd)"
-PLUGINS_DIR="$HOME/.dsh-local-plugins"
+PLUGINS_DIR="${DSH_PLUGINS_DIR:-$HOME/.dsh-local-plugins}"
 PROFILE_DIR="${DSH_HOME:-$HOME/.dsh}/profiles/desktop"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 SKIP_APP=0
@@ -29,7 +29,8 @@ die() { printf '\n\033[31mError: %s\033[0m\n' "$*" >&2; exit 1; }
 
 [[ "$(uname -s)" == "Darwin" && "$(uname -m)" == "arm64" ]] || die "This setup is for macOS on Apple Silicon."
 
-if pgrep -xq "DeepSeek Harness"; then
+# A custom DSH_HOME (e.g. a test home) is not the running app's profile.
+if [[ -z "${DSH_HOME:-}" ]] && pgrep -xq "DeepSeek Harness"; then
   die "DeepSeek Harness is running. Quit it completely (Cmd+Q) and run this again."
 fi
 
