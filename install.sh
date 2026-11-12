@@ -4,9 +4,10 @@
 #   2. the local plugins          -> ~/.dsh-local-plugins/
 #   3. the desktop profile        -> ~/.dsh/profiles/desktop/ (plugin list, bundle order, settings)
 #   4. pinned community plugins   (dsh-browser-cdp, dsh-oh-my-claude, dsh-opencode-palette, dsh-plugin-rea)
+#   5. dsh-plugin-rea's machine bundle (Ghidra + JDK, ~775 MB download) unless already present
 # Existing files are backed up next to the originals with a timestamp suffix, never deleted.
 #
-# Usage: ./install.sh [--skip-app]
+# Usage: ./install.sh [--skip-app] [--skip-rea]
 set -euo pipefail
 
 APP_VERSION="0.2.2-rc.1"
@@ -22,7 +23,14 @@ PLUGINS_DIR="${DSH_PLUGINS_DIR:-$HOME/.dsh-local-plugins}"
 PROFILE_DIR="${DSH_HOME:-$HOME/.dsh}/profiles/desktop"
 STAMP="$(date +%Y%m%d-%H%M%S)"
 SKIP_APP=0
-[[ "${1:-}" == "--skip-app" ]] && SKIP_APP=1
+SKIP_REA=0
+for arg in "$@"; do
+  case "$arg" in
+    --skip-app) SKIP_APP=1 ;;
+    --skip-rea) SKIP_REA=1 ;;
+    *) echo "Unknown option: $arg" >&2; exit 2 ;;
+  esac
+done
 
 say() { printf '\n\033[1m==> %s\033[0m\n' "$*"; }
 die() { printf '\n\033[31mError: %s\033[0m\n' "$*" >&2; exit 1; }
@@ -88,6 +96,19 @@ done
 # -------------------------------------------------- 4. install pinned packages
 say "Installing community plugins and linking local ones"
 "$DSH" plugin --profile desktop install
+
+# ----------------------------------------- 5. rea's machine bundle (not in git)
+REA_SETUP="$PROFILE_DIR/node_modules/dsh-plugin-rea/scripts/setup.mjs"
+REA_SHIM="${DSH_HOME:-$HOME/.dsh}/plugins/rea-bundle/bin/rea-shim.mjs"
+NODE="$APP/Contents/Resources/runtime/primary-runtime/dependencies/node/bin/node"
+if [[ $SKIP_REA -eq 1 || ! -f "$REA_SETUP" ]]; then
+  :
+elif [[ -f "$REA_SHIM" ]]; then
+  say "rea bundle already present"
+else
+  say "Setting up the rea bundle (downloads Ghidra + a JDK, ~775 MB; skip with --skip-rea)"
+  "$NODE" "$REA_SETUP" || echo "Warning: rea setup failed; the rea plugin stays inactive until you run: $NODE $REA_SETUP"
+fi
 
 say "Done"
 cat <<EOF

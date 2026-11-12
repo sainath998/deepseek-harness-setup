@@ -7,7 +7,9 @@
  *   POST /api/local-agent-browser/input    { events: [...] } mouse/wheel/key/text, replayed in order
  *   POST /api/local-agent-browser/command  { op, args } navigation, tabs, viewport, dialogs, launch
  */
-import { BrowserHub } from './hub.js';
+import { readFile } from 'node:fs/promises';
+import { resolve, sep } from 'node:path';
+import { BrowserHub, CAPTURES_DIR } from './hub.js';
 
 export const name = 'local-agent-browser';
 export const inject = ['connection'];
@@ -106,6 +108,14 @@ export function apply(ctx) {
     profile = ctx.get('profileContext')?.name;
   } catch {}
   const hub = new BrowserHub({ preferredProfile: profile });
+  // DSH's own web server is not a dev server.
+  hub.excludePortsProvider = () => {
+    try {
+      return [ctx.get('webServer')?.port];
+    } catch {
+      return [];
+    }
+  };
   ctx.effect(() => () => hub.dispose(), 'agent-browser: hub');
 
   ctx.effect(() => ctx.connection.fetch.register({
@@ -132,6 +142,22 @@ export function apply(ctx) {
       return json(200, { ok: true });
     },
   }), 'agent-browser: input route');
+
+  // Thumbnails of screenshots and picked elements; only files inside the captures folder.
+  ctx.effect(() => ctx.connection.fetch.register({
+    path: `${BASE}/capture`,
+    methods: ['GET'],
+    requestBody: 'buffered',
+    fetch: async (request) => {
+      const requested = resolve(new URL(request.url).searchParams.get('path') ?? '');
+      if (!requested.startsWith(resolve(CAPTURES_DIR) + sep) || !requested.endsWith('.png')) return new Response('not found', { status: 404 });
+      try {
+        return new Response(await readFile(requested), { headers: { 'content-type': 'image/png', 'cache-control': 'private, max-age=3600' } });
+      } catch {
+        return new Response('not found', { status: 404 });
+      }
+    },
+  }), 'agent-browser: capture route');
 
   ctx.effect(() => ctx.connection.fetch.register({
     path: `${BASE}/command`,

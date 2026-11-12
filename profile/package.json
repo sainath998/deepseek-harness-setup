@@ -3,6 +3,7 @@
   "private": true,
   "dependencies": {
     "@local/agent-browser": "link:__PLUGINS_DIR__/agent-browser",
+    "@local/changes": "link:__PLUGINS_DIR__/changes",
     "@local/cmd-j-terminal": "link:__PLUGINS_DIR__/cmd-j-terminal",
     "@local/delete-chat": "link:__PLUGINS_DIR__/delete-chat",
     "@local/fast-animations": "link:__PLUGINS_DIR__/fast-animations",
@@ -40,7 +41,8 @@
         "@local/cmd-j-terminal",
         "dsh-browser-cdp",
         "@local/agent-browser",
-        "@deepseek-ai/dsh-experimental-plugin-market-bundle"
+        "@deepseek-ai/dsh-experimental-plugin-market-bundle",
+        "@local/changes"
       ]
     }
   }

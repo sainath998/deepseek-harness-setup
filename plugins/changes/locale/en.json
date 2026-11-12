@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Changes",
+    "description": "T3 Code-style Changes panel: the chat's git diff against HEAD with per-file and per-hunk revert, commit, push, PRs, branches and worktrees."
+  }
+}

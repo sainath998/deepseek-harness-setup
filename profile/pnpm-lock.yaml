@@ -11,6 +11,9 @@ importers:
       '@local/agent-browser':
         specifier: link:__PLUGINS_DIR__/agent-browser
         version: link:../../../.dsh-local-plugins/agent-browser
+      '@local/changes':
+        specifier: link:__PLUGINS_DIR__/changes
+        version: link:../../../.dsh-local-plugins/changes
       '@local/cmd-j-terminal':
         specifier: link:__PLUGINS_DIR__/cmd-j-terminal
         version: link:../../../.dsh-local-plugins/cmd-j-terminal

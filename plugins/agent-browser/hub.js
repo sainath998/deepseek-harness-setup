@@ -6,9 +6,10 @@
  */
 import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { readFile, readdir } from 'node:fs/promises';
+import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
+import { discoverServers } from './servers.js';
 
 const HOME = homedir();
 const STATE_DIR = join(process.env.XDG_STATE_HOME || join(HOME, '.local', 'state'), 'ego-lite-linux');
@@ -27,6 +28,58 @@ const DETACH_GRACE_MS = 15_000;
 const SCREENCAST = { format: 'jpeg', quality: 80, maxWidth: 2560, maxHeight: 2560, everyNthFrame: 1 };
 const HIDDEN_URL = /^(devtools|chrome-extension|chrome-untrusted|chrome-search):|^chrome:\/\/(?!newtab)/;
 const SEARCH_URL = 'https://www.google.com/search?q=';
+const SERVER_POLL_MS = 5_000;
+const ZOOM_STEPS = [0.5, 0.67, 0.75, 0.8, 0.9, 1, 1.1, 1.25, 1.5, 1.75, 2];
+// Screenshots and picked elements handed to the chat live outside any project, so they never show
+// up as repository changes.
+export const CAPTURES_DIR = join(process.env.DSH_HOME || join(HOME, '.dsh'), 'agent-browser-captures');
+const HIGHLIGHT = {
+  showInfo: true,
+  showStyles: false,
+  contentColor: { r: 77, g: 107, b: 254, a: 0.22 },
+  paddingColor: { r: 77, g: 107, b: 254, a: 0.12 },
+  borderColor: { r: 77, g: 107, b: 254, a: 0.9 },
+  marginColor: { r: 255, g: 155, b: 0, a: 0.12 },
+};
+// Runs on the picked element in the page: a readable description and a stable-ish selector.
+const DESCRIBE_ELEMENT = `function () {
+  const el = this;
+  const esc = (v) => (window.CSS && CSS.escape ? CSS.escape(v) : String(v).replace(/[^a-zA-Z0-9_-]/g, '\\\\$&'));
+  const part = (node) => {
+    if (node.id) return '#' + esc(node.id);
+    let s = node.localName;
+    const classes = [...node.classList].filter((c) => !/^(css|sc|jsx|_)[-_]|[0-9a-f]{6,}/i.test(c)).slice(0, 2);
+    if (classes.length) s += '.' + classes.map(esc).join('.');
+    const parent = node.parentElement;
+    if (parent) {
+      const same = [...parent.children].filter((c) => c.localName === node.localName);
+      if (same.length > 1) s += ':nth-of-type(' + (same.indexOf(node) + 1) + ')';
+    }
+    return s;
+  };
+  const path = [];
+  for (let node = el; node && node.nodeType === 1 && path.length < 5; node = node.parentElement) {
+    path.unshift(part(node));
+    if (node.id) break;
+  }
+  const attrs = {};
+  for (const name of ['href', 'src', 'alt', 'name', 'type', 'role', 'aria-label', 'placeholder', 'title', 'value']) {
+    const v = el.getAttribute && el.getAttribute(name);
+    if (v) attrs[name] = String(v).slice(0, 160);
+  }
+  const r = el.getBoundingClientRect();
+  const style = getComputedStyle(el);
+  return {
+    tag: el.localName,
+    id: el.id || '',
+    classes: [...(el.classList || [])].slice(0, 6),
+    text: (el.innerText || el.textContent || '').replace(/\\s+/g, ' ').trim().slice(0, 240),
+    selector: path.join(' > '),
+    attrs,
+    rect: { x: r.x, y: r.y, width: r.width, height: r.height },
+    style: { color: style.color, background: style.backgroundColor, font: style.fontSize + ' ' + style.fontFamily.split(',')[0] },
+  };
+}`;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -213,6 +266,12 @@ export class BrowserHub {
     this.initializing = false;
     this.viewport = null;
     this.fill = true;
+    this.zoom = 1;
+    this.servers = [];
+    this.serversAt = 0;
+    this.serversTask = null;
+    this.excludePorts = new Set();
+    this.picking = false;
     this.status = { connected: false, launching: false, error: null };
     this.nav = { url: '', title: '', canGoBack: false, canGoForward: false, loading: false };
     this.dialog = null;
@@ -277,6 +336,8 @@ export class BrowserHub {
       nav: this.nav,
       dialog: this.dialog,
       fill: this.fill,
+      zoom: this.zoom,
+      servers: this.servers,
     };
   }
 
@@ -316,6 +377,7 @@ export class BrowserHub {
         } else if (this.session && this.frameViewers.size > 0) {
           await this.ensureVisible(this.session.id);
         }
+        if (this.eventListeners.size > 0 && Date.now() - this.serversAt > SERVER_POLL_MS) this.refreshServers();
         await sleep(this.conn ? 2000 : delay);
       }
       this.loopRunning = false;
@@ -582,10 +644,13 @@ export class BrowserHub {
     const session = this.session;
     if (!session || !this.conn) return;
     if (this.fill && this.viewport) {
+      // Zoom like a browser: the page lays out in a smaller (or larger) CSS viewport and renders at
+      // the zoom as its device scale, so frames still fill the panel pixel for pixel.
+      const zoom = this.zoom;
       await this.conn.send('Emulation.setDeviceMetricsOverride', {
-        width: this.viewport.width,
-        height: this.viewport.height,
-        deviceScaleFactor: 0,
+        width: Math.max(120, Math.round(this.viewport.width / zoom)),
+        height: Math.max(120, Math.round(this.viewport.height / zoom)),
+        deviceScaleFactor: zoom === 1 ? 0 : zoom,
         mobile: false,
       }, session.id);
     } else {
@@ -750,7 +815,7 @@ export class BrowserHub {
   /* ------------------------------------------------------------------- commands */
 
   async command(op, args = {}) {
-    if (op !== 'resize' && op !== 'setFill') this.markUserIntent();
+    if (!['resize', 'setFill', 'inspect', 'servers', 'find', 'findEnd', 'capture', 'pickEnd'].includes(op)) this.markUserIntent();
     switch (op) {
       case 'start':
         return this.start(args.url);
@@ -809,6 +874,34 @@ export class BrowserHub {
         await this.sessionTask;
         await this.applyViewport().catch(() => {});
         return {};
+      case 'zoom': {
+        const current = ZOOM_STEPS.indexOf(this.zoom);
+        let next = 1;
+        if (args.reset !== true) {
+          const index = current === -1 ? ZOOM_STEPS.indexOf(1) : current;
+          next = ZOOM_STEPS[Math.max(0, Math.min(ZOOM_STEPS.length - 1, index + (num(args.delta) > 0 ? 1 : -1)))];
+        }
+        this.zoom = next;
+        this.publish();
+        await this.sessionTask;
+        await this.applyViewport().catch(() => {});
+        return { zoom: next };
+      }
+      case 'capture':
+        return this.capture();
+      case 'inspect':
+        return this.inspectAt(num(args.x), num(args.y));
+      case 'pick':
+        return this.pickAt(num(args.x), num(args.y));
+      case 'pickEnd':
+        return this.endPick();
+      case 'find':
+        return this.find(String(args.query ?? ''), args.backwards === true, args.reset === true);
+      case 'findEnd':
+        return this.endFind();
+      case 'servers':
+        await this.refreshServers(true);
+        return { servers: this.servers };
       case 'dialog': {
         const session = await this.withSession();
         await this.conn.send('Page.handleJavaScriptDialog', {
@@ -822,6 +915,149 @@ export class BrowserHub {
       default:
         throw new Error(`Unknown command ${op}`);
     }
+  }
+
+  /* ------------------------------------------------- dev servers, capture, pick */
+
+  setExcludedPorts(ports) {
+    this.excludePorts = new Set(ports.filter((port) => Number.isInteger(port) && port > 0));
+  }
+
+  refreshServers(force = false) {
+    if (this.serversTask && !force) return this.serversTask;
+    this.serversAt = Date.now();
+    const exclude = new Set(this.excludePorts);
+    for (const port of this.excludePortsProvider?.() ?? []) if (Number.isInteger(port)) exclude.add(port);
+    if (this.conn?.socket?.url) {
+      const port = Number(new URL(this.conn.socket.url).port);
+      if (port) exclude.add(port);
+    }
+    this.serversTask = discoverServers(exclude).then((servers) => {
+      const before = new Set(this.servers.map((server) => server.port));
+      const changed = servers.length !== this.servers.length || servers.some((server) => !before.has(server.port));
+      const appeared = servers.filter((server) => !before.has(server.port));
+      this.servers = servers;
+      if (changed) this.publish();
+      // The first scan reports what was already running; later ones announce new servers.
+      if (this.serversSeeded) for (const server of appeared) if (server.html) this.emit({ t: 'server', server });
+      this.serversSeeded = true;
+    }).catch(() => {}).finally(() => {
+      this.serversTask = null;
+    });
+    return this.serversTask;
+  }
+
+  async saveCapture(base64, label) {
+    await mkdir(CAPTURES_DIR, { recursive: true });
+    const stamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const slug = String(label || 'page').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40) || 'page';
+    const path = join(CAPTURES_DIR, `${stamp}-${slug}.png`);
+    await writeFile(path, Buffer.from(base64, 'base64'));
+    return path;
+  }
+
+  /** The viewed tab's visible area as a PNG file, for the chat. */
+  async capture() {
+    const session = await this.withSession();
+    const shot = await this.conn.send('Page.captureScreenshot', { format: 'png' }, session.id);
+    const tab = this.tabs.get(this.activeId);
+    const path = await this.saveCapture(shot.data, tab ? new URL(tab.url).hostname : 'page');
+    return { path, url: tab?.url ?? '', title: tab?.title ?? '' };
+  }
+
+  async ensureInspector(sessionId) {
+    if (this.session?.inspector) return;
+    await this.conn.send('DOM.enable', {}, sessionId);
+    await this.conn.send('Overlay.enable', {}, sessionId);
+    if (this.session) this.session.inspector = true;
+  }
+
+  async nodeAt(sessionId, x, y) {
+    const { backendNodeId } = await this.conn.send('DOM.getNodeForLocation', {
+      x: Math.round(x), y: Math.round(y), includeUserAgentShadowDOM: false, ignorePointerEventsNone: true,
+    }, sessionId);
+    return backendNodeId;
+  }
+
+  /** Highlight the element under the pointer while picking (drawn in the page, so it streams). */
+  async inspectAt(x, y) {
+    const session = await this.withSession();
+    await this.ensureInspector(session.id);
+    this.picking = true;
+    try {
+      const backendNodeId = await this.nodeAt(session.id, x, y);
+      await this.conn.send('Overlay.highlightNode', { highlightConfig: HIGHLIGHT, backendNodeId }, session.id);
+    } catch {
+      await this.conn.send('Overlay.hideHighlight', {}, session.id).catch(() => {});
+    }
+    return {};
+  }
+
+  /** Describe the element at a point and capture it, for "annotate": it goes into the chat. */
+  async pickAt(x, y) {
+    const session = await this.withSession();
+    await this.ensureInspector(session.id);
+    const backendNodeId = await this.nodeAt(session.id, x, y);
+    const { object } = await this.conn.send('DOM.resolveNode', { backendNodeId }, session.id);
+    const described = await this.conn.send('Runtime.callFunctionOn', {
+      objectId: object.objectId, functionDeclaration: DESCRIBE_ELEMENT, returnByValue: true,
+    }, session.id);
+    const element = described.result?.value ?? {};
+    await this.conn.send('Overlay.hideHighlight', {}, session.id).catch(() => {});
+    let path = '';
+    const rect = element.rect;
+    if (rect && rect.width > 0 && rect.height > 0) {
+      const pad = 8;
+      const metrics = await this.conn.send('Page.getLayoutMetrics', {}, session.id);
+      const viewport = metrics.cssVisualViewport ?? {};
+      const left = Math.max(0, rect.x - pad);
+      const top = Math.max(0, rect.y - pad);
+      const clip = {
+        x: left + num(viewport.pageX),
+        y: top + num(viewport.pageY),
+        width: Math.min(rect.width + pad * 2, num(viewport.clientWidth, 4000) - left),
+        height: Math.min(rect.height + pad * 2, num(viewport.clientHeight, 4000) - top),
+        scale: 1,
+      };
+      if (clip.width > 0 && clip.height > 0) {
+        const shot = await this.conn.send('Page.captureScreenshot', { format: 'png', clip, captureBeyondViewport: false }, session.id);
+        path = await this.saveCapture(shot.data, `${element.tag || 'element'}-${element.id || element.text || ''}`);
+      }
+    }
+    this.picking = false;
+    const tab = this.tabs.get(this.activeId);
+    return { element, path, url: tab?.url ?? '', title: tab?.title ?? '' };
+  }
+
+  async endPick() {
+    this.picking = false;
+    if (this.session && this.conn) await this.conn.send('Overlay.hideHighlight', {}, this.session.id).catch(() => {});
+    return {};
+  }
+
+  /** Find in page: selects and scrolls to the next match; reports how many there are. */
+  async find(query, backwards, reset) {
+    const session = await this.withSession();
+    if (!query) return this.endFind();
+    const expression = `(() => {
+      const q = ${JSON.stringify(query)};
+      if (${reset ? 'true' : 'false'}) { const s = getSelection(); s && s.removeAllRanges(); }
+      const found = window.find(q, false, ${backwards ? 'true' : 'false'}, true, false, false, false);
+      const text = (document.body && document.body.innerText) || '';
+      const lower = text.toLowerCase(), needle = q.toLowerCase();
+      let count = 0;
+      for (let i = lower.indexOf(needle); i !== -1 && count < 9999; i = lower.indexOf(needle, i + needle.length)) count++;
+      return { found, count };
+    })()`;
+    const { result } = await this.conn.send('Runtime.evaluate', { expression, returnByValue: true }, session.id);
+    return result?.value ?? { found: false, count: 0 };
+  }
+
+  async endFind() {
+    if (this.session && this.conn) {
+      await this.conn.send('Runtime.evaluate', { expression: 'getSelection() && getSelection().removeAllRanges()' }, this.session.id).catch(() => {});
+    }
+    return {};
   }
 
   async newTab(url) {

@@ -94,6 +94,28 @@ window.__ModuleLoader__.load({
 .lab-pill .lab-btn{width:26px;height:26px}
 .lab-pill-grip{display:inline-flex;align-items:center;justify-content:center;width:18px;height:26px;color:var(--dsw-alias-label-tertiary)}
 .lab-resize{position:absolute;z-index:7;touch-action:none}
+.lab-find{position:absolute;top:8px;right:8px;z-index:6;display:flex;align-items:center;gap:2px;padding:3px 3px 3px 10px;border-radius:9px;background:var(--dsw-alias-bg-layer-3,var(--dsw-alias-bg-base));border:.5px solid var(--dsw-alias-border-l2);box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.lab-find input{width:170px;border:none;outline:none;background:none;color:var(--dsw-alias-label-primary);font:inherit;font-size:12.5px}
+.lab-find-count{font-size:11.5px;color:var(--dsw-alias-label-tertiary);min-width:44px;text-align:right;padding-right:4px;font-variant-numeric:tabular-nums}
+.lab-banner{position:absolute;left:8px;right:8px;bottom:8px;z-index:5;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;border-radius:10px;background:var(--dsw-alias-bg-layer-3,var(--dsw-alias-bg-base));border:.5px solid var(--dsw-alias-border-l2);box-shadow:0 8px 24px rgba(0,0,0,.25);font-size:12.5px}
+.lab-banner-text{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lab-banner-text b{font-weight:600}
+.lab-note{position:absolute;left:8px;right:8px;bottom:8px;z-index:6;display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:var(--dsw-alias-bg-layer-3,var(--dsw-alias-bg-base));border:.5px solid var(--dsw-alias-border-l2);box-shadow:0 12px 32px rgba(0,0,0,.3);font-size:12.5px}
+.lab-note-head{display:flex;gap:10px;align-items:flex-start}
+.lab-note-thumb{width:64px;height:44px;border-radius:6px;object-fit:cover;flex:none;background:var(--dsw-alias-bg-layer-1);border:.5px solid var(--dsw-alias-border-l2)}
+.lab-note-tag{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:var(--dsw-alias-label-primary);word-break:break-all}
+.lab-note-text{color:var(--dsw-alias-label-tertiary);font-size:12px;margin-top:2px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.lab-note textarea{width:100%;box-sizing:border-box;min-height:56px;resize:vertical;padding:8px 10px;border-radius:8px;border:.5px solid var(--dsw-alias-border-l3,var(--dsw-alias-border-l2));background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font:inherit;font-size:12.5px;outline:none}
+.lab-note textarea:focus{border-color:var(--dsw-alias-border-l4,var(--dsw-alias-label-tertiary))}
+.lab-pickhint{position:absolute;top:8px;left:50%;transform:translateX(-50%);z-index:6;padding:5px 10px;border-radius:8px;background:var(--dsw-alias-bg-layer-3,var(--dsw-alias-bg-base));border:.5px solid var(--dsw-alias-border-l2);box-shadow:0 6px 18px rgba(0,0,0,.22);font-size:12px;color:var(--dsw-alias-label-secondary);pointer-events:none;white-space:nowrap}
+.lab-zoom{height:22px;padding:0 7px;border:none;border-radius:6px;background:var(--dsw-alias-interactive-bg-hover);color:var(--dsw-alias-label-secondary);font:inherit;font-size:11px;cursor:pointer;flex:none;font-variant-numeric:tabular-nums}
+.lab-servers{display:flex;flex-direction:column;gap:6px;width:100%;margin-top:8px}
+.lab-server{display:flex;align-items:center;gap:10px;width:100%;padding:8px 10px;border-radius:9px;border:.5px solid var(--dsw-alias-border-l2);background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.lab-server:hover{background:var(--dsw-alias-interactive-bg-hover)}
+.lab-server-dot{width:7px;height:7px;border-radius:50%;background:var(--dsw-alias-state-success-primary,#22c55e);flex:none}
+.lab-server-main{flex:1;min-width:0;display:flex;flex-direction:column}
+.lab-server-main span:last-child{font-size:11.5px;color:var(--dsw-alias-label-tertiary)}
+.lab-server-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .lab-tooltip{position:fixed;z-index:70;padding:4px 8px;border-radius:6px;background:var(--dsw-alias-tooltip-bg,#222);color:#fff;font-size:11.5px;pointer-events:none;white-space:nowrap}
 `;
 
@@ -118,6 +140,11 @@ window.__ModuleLoader__.load({
       lock: (s) => svg([h('rect', { key: 'r', x: 4, y: 11, width: 16, height: 10, rx: 2 }), path('M8 11V7a4 4 0 0 1 8 0v4')], s),
       search: (s) => svg([h('circle', { key: 'c', cx: 11, cy: 11, r: 7 }), path('m20 20-3.5-3.5')], s),
       check: (s) => svg([path('M20 6 9 17l-5-5')], s),
+      camera: (s) => svg([path('M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z'), h('circle', { key: 'c', cx: 12, cy: 13, r: 3 })], s),
+      pick: (s) => svg([path('M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z'), path('m13 13 6 6')], s),
+      server: (s) => svg([h('rect', { key: 'a', x: 2, y: 3, width: 20, height: 8, rx: 2 }), h('rect', { key: 'b', x: 2, y: 13, width: 20, height: 8, rx: 2 }), path('M6 7h.01'), path('M6 17h.01')], s),
+      up: (s) => svg([path('m18 15-6-6-6 6')], s),
+      down: (s) => svg([path('m6 9 6 6 6-6')], s),
       grip: (s) => svg([1, 2, 3].flatMap((row) => [9, 15].map((x) => h('circle', { key: `${row}${x}`, cx: x, cy: row * 6, r: 1, fill: 'currentColor', stroke: 'none' }))), s),
     };
 
@@ -151,6 +178,11 @@ window.__ModuleLoader__.load({
       conversation: true,
       source: { width: 1280, height: 800 },
       agentActiveAt: 0,
+      picking: false,
+      findOpen: false,
+      announce: null,
+      note: null,
+      toast: null,
     };
     const subscribers = new Set();
     const store = {
@@ -189,7 +221,43 @@ window.__ModuleLoader__.load({
       openTab: () => {},
       hideTab: () => {},
       onScreen: () => undefined,
+      // Append text to the chat input of the Session on screen; false when there is none.
+      sendToChat: () => false,
     };
+
+    let toastTimer = 0;
+    const toast = (text, tone) => {
+      clearTimeout(toastTimer);
+      store.set({ toast: { text, tone: tone ?? 'info' } });
+      toastTimer = setTimeout(() => store.set({ toast: null }), 3500);
+    };
+    // Long tracking-heavy URLs (search results) bloat the chat message; keep origin + path.
+    const shortUrl = (url) => {
+      if (!url || url.length <= 120) return url;
+      try {
+        const parsed = new URL(url);
+        const query = parsed.searchParams.get('q');
+        return `${parsed.origin}${parsed.pathname}${query ? `?q=${encodeURIComponent(query)}` : ''}`;
+      } catch {
+        return url.slice(0, 120);
+      }
+    };
+    const shareCapture = async () => {
+      try {
+        const shot = await command('capture');
+        const label = shot.title && !shot.title.startsWith('http') ? `${shot.title} — ${shortUrl(shot.url)}` : shortUrl(shot.url);
+        const ok = controls.sendToChat(`Screenshot of the browser (${label}):\n${shot.path}`);
+        toast(ok ? 'Screenshot added to the chat input' : `Screenshot saved to ${shot.path}`);
+      } catch (error) {
+        toast(`Screenshot failed: ${error.message}`, 'error');
+      }
+    };
+    const setPicking = (on) => {
+      if (state.picking === on) return;
+      store.set({ picking: on, note: on ? null : state.note });
+      if (!on) fire('pickEnd');
+    };
+    const zoomBy = (delta) => fire('zoom', delta === 0 ? { reset: true } : { delta });
 
     /** Agent activity reveals the browser when nothing shows it, T3's autoShowFloatingPreview. */
     function revealForAgent(force) {
@@ -315,6 +383,10 @@ window.__ModuleLoader__.load({
         store.set({ browser });
         return;
       }
+      if (event.t === 'server') {
+        store.set({ announce: event.server });
+        return;
+      }
       if (event.t === 'activity' && event.by === 'agent') {
         revealForAgent(false);
         return;
@@ -408,6 +480,7 @@ window.__ModuleLoader__.load({
       const activeId = useStore((s) => s.browser.activeId);
       const fillEnabled = useStore((s) => s.browser.fill);
       const loading = useStore((s) => s.browser.nav.loading);
+      const picking = useStore((s) => s.picking);
 
       useEffect(() => {
         setHasFrame(false);
@@ -545,7 +618,37 @@ window.__ModuleLoader__.load({
         return count;
       };
 
+      const inspectRef = useRef({ at: 0, timer: 0 });
+      const onPick = (event) => {
+        const point = pagePoint(event.clientX, event.clientY, false);
+        if (!point) return;
+        if (event.type === 'pointermove') {
+          // Throttle the highlight to ~12/s; the last position always lands.
+          const slot = inspectRef.current;
+          clearTimeout(slot.timer);
+          const run = () => {
+            slot.at = Date.now();
+            fire('inspect', point);
+          };
+          if (Date.now() - slot.at > 80) run();
+          else slot.timer = setTimeout(run, 80);
+        } else if (event.type === 'pointerdown' && event.button === 0) {
+          event.preventDefault();
+          clearTimeout(inspectRef.current.timer);
+          command('pick', point).then((picked) => {
+            store.set({ picking: false, note: picked });
+          }).catch((error) => {
+            store.set({ picking: false });
+            toast(`Could not pick that element: ${error.message}`, 'error');
+          });
+        }
+      };
+
       const onPointer = (event) => {
+        if (state.picking) {
+          onPick(event);
+          return;
+        }
         const { type } = event;
         if (event.pointerType === 'mouse' && type === 'pointerdown' && (event.button === 3 || event.button === 4)) {
           event.preventDefault();
@@ -598,6 +701,24 @@ window.__ModuleLoader__.load({
           return;
         }
         const shortcut = event.ctrlKey || event.metaKey;
+        if (event.key === 'Escape' && state.picking) {
+          event.preventDefault();
+          if (action === 'down') setPicking(false);
+          return;
+        }
+        // Browser-chrome shortcuts stay with the panel: find and zoom.
+        if (shortcut && !event.altKey) {
+          const key = event.key.toLowerCase();
+          const zoom = key === '=' || key === '+' ? 1 : key === '-' ? -1 : key === '0' ? 0 : null;
+          if (key === 'f' || zoom !== null) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (action !== 'down') return;
+            if (key === 'f') store.set({ findOpen: true });
+            else zoomBy(zoom);
+            return;
+          }
+        }
         // Paste arrives as a paste event with the clipboard text.
         if (shortcut && event.key.toLowerCase() === 'v') return;
         if (event.shiftKey && event.key === 'Insert') return;
@@ -655,7 +776,10 @@ window.__ModuleLoader__.load({
           onPointerUp: onPointer,
           onPointerCancel: onPointer,
           onMouseDown: (event) => event.preventDefault(),
-          style: { visibility: hasFrame ? 'visible' : 'hidden' },
+          onPointerLeave: () => {
+            if (state.picking) fire('pickEnd');
+          },
+          style: { visibility: hasFrame ? 'visible' : 'hidden', cursor: picking ? 'crosshair' : undefined },
         }),
         h('textarea', {
           ref: inputRef,
@@ -779,10 +903,33 @@ window.__ModuleLoader__.load({
         }));
     }
 
+    function ServersButton() {
+      const servers = useStore((s) => s.browser.servers ?? []);
+      const activeId = useStore((s) => s.browser.activeId);
+      const [menu, setMenu] = useState(null);
+      const closeMenu = useCallback(() => setMenu(null), []);
+      if (servers.length === 0) return null;
+      return h(React.Fragment, null,
+        h(IconButton, {
+          label: `Local servers (${servers.length})`,
+          icon: Icon.server(15),
+          onClick: (event) => setMenu(event.currentTarget.getBoundingClientRect()),
+        }),
+        menu ? h(Menu, {
+          anchor: menu,
+          onClose: closeMenu,
+          items: servers.flatMap((server) => [
+            { label: `${server.url.replace('http://', '')}${server.title ? ` — ${server.title}` : ''}`, run: () => fire(activeId ? 'navigate' : 'newTab', { url: server.url }) },
+          ]).concat(['-', { label: 'Rescan', run: () => fire('servers') }]),
+        }) : null);
+    }
+
     function ChromeRow({ onPopOut }) {
       const nav = useStore((s) => s.browser.nav);
       const activeId = useStore((s) => s.browser.activeId);
       const fill = useStore((s) => s.browser.fill);
+      const zoom = useStore((s) => s.browser.zoom ?? 1);
+      const picking = useStore((s) => s.picking);
       const [menu, setMenu] = useState(null);
       const has = activeId !== null;
       const closeMenu = useCallback(() => setMenu(null), []);
@@ -796,6 +943,10 @@ window.__ModuleLoader__.load({
           onClick: (event) => fire(nav.loading ? 'stop' : 'reload', { ignoreCache: event.shiftKey }),
         }),
         h(AddressBar),
+        zoom !== 1 ? h(Tip, { label: 'Reset zoom' }, h('button', { type: 'button', className: 'lab-zoom', onClick: () => zoomBy(0) }, `${Math.round(zoom * 100)}%`)) : null,
+        h(ServersButton),
+        h(IconButton, { label: picking ? 'Cancel annotation' : 'Annotate an element', icon: Icon.pick(15), disabled: !has, pressed: picking, onClick: () => setPicking(!picking) }),
+        h(IconButton, { label: 'Screenshot to chat', icon: Icon.camera(15), disabled: !has, onClick: shareCapture }),
         h(IconButton, {
           label: 'Open in system browser',
           icon: Icon.external(15),
@@ -813,9 +964,13 @@ window.__ModuleLoader__.load({
           onClose: closeMenu,
           items: [
             { label: 'New tab', run: () => fire('newTab', {}) },
+            { label: 'Find in page  ⌘F', run: () => store.set({ findOpen: true }) },
             { label: 'Reload ignoring cache', run: () => fire('reload', { ignoreCache: true }) },
             { label: 'Copy page address', run: () => navigator.clipboard?.writeText(nav.url).catch(() => {}) },
             '-',
+            { label: `Zoom in  ⌘+   (${Math.round(zoom * 100)}%)`, run: () => zoomBy(1) },
+            { label: 'Zoom out  ⌘−', run: () => zoomBy(-1) },
+            { label: 'Actual size  ⌘0', run: () => zoomBy(0) },
             { label: 'Fit page to panel', checked: fill, run: () => fire('setFill', { fill: !fill }) },
             '-',
             { label: 'Close tab', run: () => fire('closeTab', {}) },
@@ -874,7 +1029,8 @@ window.__ModuleLoader__.load({
               onChange: (event) => setValue(event.currentTarget.value),
             }),
             h('button', { type: 'submit', className: 'lab-primary', disabled: busy }, busy ? 'Starting…' : action)),
-          failure || error ? h('div', { className: 'lab-error' }, failure || error) : null));
+          failure || error ? h('div', { className: 'lab-error' }, failure || error) : null,
+          h(ServerCards)));
     }
 
     function DialogBanner() {
@@ -896,6 +1052,157 @@ window.__ModuleLoader__.load({
         h('div', { className: 'lab-dialog-row' },
           dialog.type === 'alert' ? null : h('button', { type: 'button', className: 'lab-ghost', onClick: () => answer(false) }, 'Cancel'),
           h('button', { type: 'button', className: 'lab-primary', style: { height: 28 }, onClick: () => answer(true) }, 'OK')));
+    }
+
+    function FindBar() {
+      const open = useStore((s) => s.findOpen);
+      const [query, setQuery] = useState('');
+      const [result, setResult] = useState(null);
+      const [index, setIndex] = useState(0);
+      const inputRef = useRef(null);
+      useEffect(() => {
+        if (open) requestAnimationFrame(() => inputRef.current?.select());
+      }, [open]);
+      if (!open) return null;
+      const run = async (backwards, reset) => {
+        if (!query) return;
+        try {
+          const found = await command('find', { query, backwards, reset });
+          setResult(found);
+          setIndex((current) => {
+            if (!found.count) return 0;
+            if (reset) return 1;
+            return backwards ? (current <= 1 ? found.count : current - 1) : current >= found.count ? 1 : current + 1;
+          });
+        } catch {}
+      };
+      const close = () => {
+        store.set({ findOpen: false });
+        setResult(null);
+        fire('findEnd');
+      };
+      return h('div', { className: 'lab-find', role: 'search' },
+        h('input', {
+          ref: inputRef,
+          value: query,
+          placeholder: 'Find in page',
+          'aria-label': 'Find in page',
+          onChange: (event) => {
+            setQuery(event.currentTarget.value);
+            setResult(null);
+          },
+          onKeyDown: (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              run(event.shiftKey, result === null);
+            } else if (event.key === 'Escape') {
+              event.preventDefault();
+              close();
+            }
+          },
+        }),
+        h('span', { className: 'lab-find-count' }, result === null ? '' : result.count ? `${index}/${result.count}` : 'No results'),
+        h(IconButton, { label: 'Previous match', icon: Icon.up(14), disabled: !query, onClick: () => run(true, result === null) }),
+        h(IconButton, { label: 'Next match', icon: Icon.down(14), disabled: !query, onClick: () => run(false, result === null) }),
+        h(IconButton, { label: 'Close find', icon: Icon.x(14), onClick: close }));
+    }
+
+    function ServerBanner() {
+      const server = useStore((s) => s.announce);
+      const activeUrl = useStore((s) => s.browser.nav.url);
+      const activeId = useStore((s) => s.browser.activeId);
+      useEffect(() => {
+        if (!server) return;
+        const timer = setTimeout(() => store.set({ announce: null }), 30_000);
+        return () => clearTimeout(timer);
+      }, [server]);
+      if (!server || activeUrl.startsWith(server.url)) return null;
+      return h('div', { className: 'lab-banner', role: 'status' },
+        h('span', { className: 'lab-server-dot' }),
+        h('span', { className: 'lab-banner-text' }, 'Dev server started on ', h('b', null, server.url.replace('http://', '')), server.title ? ` · ${server.title}` : ''),
+        h('button', {
+          type: 'button',
+          className: 'lab-primary',
+          style: { height: 28 },
+          onClick: () => {
+            store.set({ announce: null });
+            fire(activeId ? 'navigate' : 'newTab', { url: server.url });
+          },
+        }, 'Open'),
+        h(IconButton, { label: 'Dismiss', icon: Icon.x(14), onClick: () => store.set({ announce: null }) }));
+    }
+
+    /** After a pick: show what was picked, take an optional note, then hand it to the chat. */
+    function NotePopover() {
+      const note = useStore((s) => s.note);
+      const [text, setText] = useState('');
+      const areaRef = useRef(null);
+      useEffect(() => {
+        setText('');
+        if (note) requestAnimationFrame(() => areaRef.current?.focus());
+      }, [note]);
+      if (!note) return null;
+      const el = note.element ?? {};
+      const tag = `<${el.tag ?? 'element'}${el.id ? `#${el.id}` : ''}${el.classes?.length ? `.${el.classes.slice(0, 3).join('.')}` : ''}>`;
+      const send = () => {
+        const lines = [`Browser element on ${shortUrl(note.url)}`, `${tag}${el.text ? ` "${el.text.slice(0, 160)}"` : ''}`];
+        if (el.selector) lines.push(`Selector: ${el.selector}`);
+        const attrs = Object.entries(el.attrs ?? {}).map(([key, value]) => `${key}="${value}"`).join(' ');
+        if (attrs) lines.push(`Attributes: ${attrs}`);
+        if (note.path) lines.push(`Screenshot: ${note.path}`);
+        if (text.trim()) lines.push(`Note: ${text.trim()}`);
+        const ok = controls.sendToChat(lines.join('\n'));
+        store.set({ note: null });
+        toast(ok ? 'Element added to the chat input' : 'No chat is open to add it to', ok ? 'info' : 'error');
+      };
+      return h('div', { className: 'lab-note', role: 'dialog', 'aria-label': 'Annotate element' },
+        h('div', { className: 'lab-note-head' },
+          note.path ? h('img', { className: 'lab-note-thumb', alt: '', src: `${API}capture?path=${encodeURIComponent(note.path)}` }) : null,
+          h('div', { style: { minWidth: 0, flex: 1 } },
+            h('div', { className: 'lab-note-tag' }, tag),
+            el.text ? h('div', { className: 'lab-note-text' }, el.text) : null)),
+        h('textarea', {
+          ref: areaRef,
+          value: text,
+          placeholder: 'What should change here? (optional)',
+          onChange: (event) => setText(event.currentTarget.value),
+          onKeyDown: (event) => {
+            if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
+              event.preventDefault();
+              send();
+            } else if (event.key === 'Escape') {
+              event.preventDefault();
+              store.set({ note: null });
+            }
+          },
+        }),
+        h('div', { className: 'lab-dialog-row' },
+          h('button', { type: 'button', className: 'lab-ghost', onClick: () => store.set({ note: null }) }, 'Cancel'),
+          h('button', { type: 'button', className: 'lab-ghost', onClick: () => store.set({ note: null, picking: true }) }, 'Pick again'),
+          h('button', { type: 'button', className: 'lab-primary', style: { height: 28 }, onClick: send }, 'Add to chat  ⌘↵')));
+    }
+
+    function StageToast() {
+      const message = useStore((s) => s.toast);
+      if (!message) return null;
+      return h('div', { className: 'lab-pickhint', role: 'status', style: { top: 'auto', bottom: 12, color: message.tone === 'error' ? 'var(--dsw-alias-state-error-primary)' : undefined } }, message.text);
+    }
+
+    function ServerCards() {
+      const servers = useStore((s) => s.browser.servers ?? []);
+      const connected = useStore((s) => s.browser.connected);
+      if (servers.length === 0) return null;
+      return h('div', { className: 'lab-servers' },
+        servers.map((server) => h('button', {
+          key: server.port,
+          type: 'button',
+          className: 'lab-server',
+          onClick: () => fire(connected ? 'newTab' : 'start', { url: server.url }),
+        },
+          h('span', { className: 'lab-server-dot' }),
+          h('span', { className: 'lab-server-main' },
+            h('span', { className: 'lab-server-title' }, server.title || server.url.replace('http://', '')),
+            h('span', null, `${server.url.replace('http://', '')} · ${server.command}`)))));
     }
 
     function Stage({ active, fill }) {
@@ -921,7 +1228,16 @@ window.__ModuleLoader__.load({
       } else {
         content = h(Surface, { active, fill });
       }
-      return h('div', { className: 'lab-stage' }, content, connected && hasTab ? h(DialogBanner) : null);
+      const picking = useStore((s) => s.picking);
+      const ready = connected && hasTab;
+      return h('div', { className: 'lab-stage' },
+        content,
+        ready ? h(DialogBanner) : null,
+        ready ? h(FindBar) : null,
+        ready && picking ? h('div', { className: 'lab-pickhint' }, 'Click an element to annotate it · Esc to cancel') : null,
+        ready ? h(NotePopover) : null,
+        ready ? h(ServerBanner) : null,
+        h(StageToast));
     }
 
     function Panel({ active, onPopOut }) {
@@ -1162,7 +1478,7 @@ window.__ModuleLoader__.load({
     }
 
     return {
-      inject: ['slots', 'sidebarRightTabs', 'sidebarRight'],
+      inject: ['slots', 'sidebarRightTabs', 'sidebarRight', 'sessions'],
       apply(ctx) {
         ctx.effect(() => {
           const style = document.createElement('style');
@@ -1183,6 +1499,25 @@ window.__ModuleLoader__.load({
           try {
             ctx.sidebarRight.hide(tabId);
           } catch {}
+        };
+        controls.sendToChat = (text) => {
+          try {
+            const sessionId = controls.onScreen();
+            if (!sessionId) return false;
+            const scope = ctx.sessions.scope(sessionId);
+            const input = ctx.get('conversation')?.input?.for(scope);
+            if (!input || typeof input.setDraft !== 'function') return false;
+            let draft = '';
+            try {
+              draft = typeof input.draft === 'string' ? input.draft : input.state?.getSnapshot?.()?.draft ?? '';
+            } catch {}
+            if (typeof draft !== 'string') draft = draft?.text ?? '';
+            input.setDraft(draft ? `${draft.replace(/\s+$/, '')}\n\n${text}` : text);
+            return true;
+          } catch (error) {
+            console.warn('[agent-browser] could not add to the chat input', error);
+            return false;
+          }
         };
         controls.onScreen = () => {
           try {

@@ -14,6 +14,16 @@ cd deepseek-harness-setup
 
 Quit DeepSeek Harness (Cmd+Q) first. Anything replaced is backed up with a `.bak-<timestamp>` suffix.
 
+## After a DeepSeek Harness update
+
+```sh
+./smoke-test.sh
+```
+
+Boots an isolated copy of this setup (same plugins, order and settings, separate DSH home, spare port)
+and reports PASS/FAIL: the host starts, the UI is served, and no plugin failed to load. Your real
+profile is untouched. If it fails, `./install.sh` puts you back on the pinned 0.2.2-rc.1.
+
 ## What's pinned
 
 | Piece | Version |
@@ -28,7 +38,8 @@ Quit DeepSeek Harness (Cmd+Q) first. Anything replaced is backed up with a `.bak
 
 | Plugin | What it does |
 |---|---|
-| agent-browser | T3 Code-style browser: the (headless) Chrome the agent drives, in the right sidebar with address bar, tabs and full mouse/keyboard; collapsing the sidebar floats it over the chat (drag, resize, open in sidebar, close). Agents get a `sidebar_browser` tool. Replaces the built-in Browser tab. |
+| agent-browser | T3 Code-style browser: the (headless) Chrome the agent drives, in the right sidebar with address bar, tabs and full mouse/keyboard; collapsing the sidebar floats it over the chat (drag, resize, open in sidebar, close). Detects local dev servers (banner + "Open" cards), **annotate** (pick an element, add a note, send it to the chat), **screenshot to chat**, find in page (⌘F), zoom (⌘+ / ⌘− / ⌘0). Agents get a `sidebar_browser` tool. Replaces the built-in Browser tab. |
+| changes | T3 Code-style Changes panel: the chat's git diff against HEAD, revert a file or a single hunk, commit selected files, commit & push, commit & PR, switch/create branches, and "New worktree for this chat" (enables DSH's experimental worktree service and its agent tool). Follows the chat into its worktree. |
 | pull-requests | Read-only GitHub PR panel in the right sidebar (needs `gh auth login`). |
 | cmd-j-terminal | Cmd+J toggles a terminal along the bottom of the window. |
 | settled-section | Settle finished chats into a Settled section at the bottom of the sidebar. |
@@ -48,6 +59,7 @@ plugins/   local plugins (each is an @local/<name> package, linked from ~/.dsh-l
 profile/   ~/.dsh/profiles/desktop: package.json (deps + bundle order), cordis.patch.yml (settings),
            pnpm lock; __PLUGINS_DIR__ is replaced with ~/.dsh-local-plugins by install.sh
 install.sh
+smoke-test.sh
 ```
 
 ## Not included

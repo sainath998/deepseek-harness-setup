@@ -1,0 +1,10 @@
+- insert:
+    - id: changes
+      name: '@local/changes'
+    # (Do not also enable @deepseek-ai/dsh-experimental-forge-bundle: it inserts the same service.)
+    # DSH's own (experimental) git worktree service, used by "New worktree for this chat",
+    # and its model tool so agents can do the same.
+    - id: experimental-worktree
+      name: '@deepseek-ai/dsh-experimental-worktree'
+    - id: experimental-tool-worktree
+      name: '@deepseek-ai/dsh-experimental-tool-worktree'
