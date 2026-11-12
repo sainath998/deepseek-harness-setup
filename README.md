@@ -34,6 +34,10 @@ profile is untouched. If it fails, `./install.sh` puts you back on the pinned 0.
 | dsh-opencode-palette | 2.1.12 |
 | dsh-plugin-rea | 2.0.16 |
 
+## Docs
+
+- [Integrated browser](docs/integrated-browser.md): how the sidebar browser works, setup on another Mac, DSH APIs used, gotchas, testing and troubleshooting.
+
 ## Local plugins (`plugins/`)
 
 | Plugin | What it does |
